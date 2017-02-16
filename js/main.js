@@ -8,7 +8,7 @@ var fillSurface;
         surfaceArea = surface.getBoundingClientRect();
         width = surfaceArea.width;
         height = surfaceArea.height;
-        pixelSize = nextFactor(20, width);
+        pixelSize = nextFactor(35, width);
         xPixels = Math.floor(width / pixelSize);
         yPixels = Math.floor(height / pixelSize);
         baseGap = height % pixelSize;
@@ -40,6 +40,7 @@ var fillSurface;
                     borderRadius: '50%'
                 }
                 var elem = document.createElement('div');
+                elem.classList.add('pixel');
                 Object.assign(elem.style, props, createDepth());
                 surface.appendChild(elem);
                 pixels.push(elem);
@@ -56,7 +57,7 @@ var fillSurface;
     }
 
     function update() {
-        setTimeout(update, getRandomInt(100, 300));
+        setTimeout(update, getRandomInt(333, 999));
         var elem = pixels[Math.floor(Math.random() * pixels.length)];
         updatePixel(elem);
     }
@@ -66,7 +67,7 @@ var fillSurface;
         var offset = depth / 100;
         var width = pixelSize + (pixelSize * offset);
         var height = width;
-        var o = opacity - offset;
+        var o = (opacity + offset) - (maxDepth / 100);
         return {
             width: width + 'px',
             height: height + 'px',
@@ -84,11 +85,6 @@ var fillSurface;
                 hue: 'blue'
             });
         Object.assign(pixel.style, props);
-        // var offsetWidth = pixel.getBoundingClientRect().width - Number(props.width.replace('px', ''));
-        // requestAnimationFrame(function(timestamp){
-        //     var starttime = timestamp || new Date().getTime() //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date
-        //     animateSize(starttime, timestamp, pixel, offsetWidth, 999) // 400px over 1 second
-        // })
     }
 
     function nextFactor(start, target) {
@@ -97,22 +93,6 @@ var fillSurface;
 
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function animateSize(starttime, timestamp, el, offsetWidth, duration){
-        //if browser doesn't support requestAnimationFrame, generate our own timestamp using Date:
-        var timestamp = timestamp || new Date().getTime()
-        var runtime = timestamp - starttime
-        var progress = runtime / duration
-        progress = Math.min(progress, 1)
-        var nextWidth = Number(el.getBoundingClientRect().width) + (offsetWidth * progress);
-        el.style.width = nextWidth + 'px';
-        el.style.height = nextWidth + 'px';
-        if (runtime < duration){ // if duration not met yet
-            requestAnimationFrame(function(timestamp){ // call requestAnimationFrame again with parameters
-                animateSize(starttime, timestamp, el, offsetWidth, duration)
-            })
-        }
     }
 
     document.addEventListener("DOMContentLoaded", function(event) {
